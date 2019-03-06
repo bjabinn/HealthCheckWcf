@@ -17,11 +17,16 @@ namespace Back
     {
         static void Main(string[] args)
         {
+            try
+            {
+                var service = GDriveService.GetService("HealthCheckWcf","credentials.json");
+                UploadDrive.UploadJson("files/testJson.json", service); 
+            }
+            catch (System.Exception ex)
+            {               
+                System.Console.WriteLine(ex.Data["ErrorInfo"]);
+            }
             
-            var service = GDriveService.GetService("HealthCheckWcf","credentials.json");
-
-            UploadDrive.UploadJson("files/testJson.json", service);
-
         }
     }
 }

@@ -17,22 +17,31 @@ namespace Back
     {
         public static void UploadJson(string path, DriveService service)
         {
-            var fileMetadata = new Google.Apis.Drive.v3.Data.File();
-            string mimeType = Helpers.GetMimeType(path);
+            try
+            {
+                var fileMetadata = new Google.Apis.Drive.v3.Data.File();
+                string mimeType = Helpers.GetMimeType(path);
 
-            fileMetadata.Name = Path.GetFileName(path);
-            fileMetadata.MimeType = mimeType;
-            FilesResource.CreateMediaUpload request;
+                fileMetadata.Name = Path.GetFileName(path);
+                fileMetadata.MimeType = mimeType;
+                FilesResource.CreateMediaUpload request;
 
-            using (var stream = new System.IO.FileStream(path,System.IO.FileMode.Open)){
+                using (var stream = new System.IO.FileStream(path,System.IO.FileMode.Open)){
 
-                request = service.Files.Create(fileMetadata, stream, mimeType);
-                request.Fields = "id";
-                request.Upload();
+                    request = service.Files.Create(fileMetadata, stream, mimeType);
+                    request.Fields = "id";
+                    request.Upload();
+                }
+
+                var file = request.ResponseBody;
+                System.Console.WriteLine("Uploaded "+ fileMetadata.Name +" with file ID: " + file.Id); 
             }
-
-            var file = request.ResponseBody;
-            System.Console.WriteLine("Uploaded "+ fileMetadata.Name +" with file ID: " + file.Id);
+            catch (System.Exception ex)
+            {
+                ex.Data["ErrorInfo"] += string.Format("\nERROR: Failed while uploading file with exception: {0}", ex.Message);
+                throw ex;
+            }
+            
         }
     }
 }
