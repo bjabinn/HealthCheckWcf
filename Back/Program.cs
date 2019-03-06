@@ -20,7 +20,7 @@ namespace Back
             
             var service = GDriveService.GetService("HealthCheckWcf","credentials.json");
 
-            UploadDrive.UploadJson("files/testJson.json", "application/json", service);
+            UploadDrive.UploadJson("files/testJson.json", service);
 
         }
     }

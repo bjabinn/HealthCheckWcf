@@ -15,9 +15,10 @@ namespace Back
 {
     class UploadDrive
     {
-        public static void UploadJson(string path, string mimeType, DriveService service)
+        public static void UploadJson(string path, DriveService service)
         {
             var fileMetadata = new Google.Apis.Drive.v3.Data.File();
+            string mimeType = Helpers.GetMimeType(path);
 
             fileMetadata.Name = Path.GetFileName(path);
             fileMetadata.MimeType = mimeType;
