@@ -1,0 +1,18 @@
+<div class="service_box elev-2" [class.service-timeout]="serviceData.notifyTimeout" #serviceBox>
+  <h1>
+    <span>
+      {{titlePrefix}}
+    </span>
+    {{serviceData.title}}
+  </h1>
+
+
+  <div class="outer-container">
+    <div class="inner-container">
+      <canvas #canvas baseChart [colors]="barChartColors" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+        [legend]="barChartLegend" [chartType]="barChartType">
+      </canvas>
+      <!-- [style.width.px]="canvasWidth" [style.height.px]="canvasHeight" -->
+    </div>
+  </div>
+</div>

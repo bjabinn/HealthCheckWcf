@@ -1,0 +1,32 @@
+.content{
+    // display: grid;
+    // grid-template-columns: repeat(2,1fr);
+    // grid-gap: 1rem;   
+    
+    
+    // display: grid;
+    // grid-template-columns: 1fr 1fr;
+    // /* grid-gap: 1rem; */
+    // grid-template-rows: 1fr 1fr;
+    // padding: 1rem;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 50vh 50vh;
+}
+
+chart{
+    padding: 1rem;
+    overflow: hidden;
+}
+
+
+
+
+.error{
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: red;
+    text-align: center;
+    padding-top: 3rem;
+}

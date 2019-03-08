@@ -1,0 +1,95 @@
+.outer-container {
+  width: 80%;
+  height: 100%;
+//   padding: 1rem;
+  margin:0 auto;
+
+}
+
+.service_box {
+    text-align: center;
+    height: 100%;
+    background: white;
+    // width: 85%;
+    margin: 0 auto;
+    border-radius:4px;
+    overflow: hidden;
+}
+
+
+
+// canvas{
+//     width: 80% !important;
+// }
+
+h1{
+    margin-top: 0;
+    padding-top: 1rem;
+    /* padding-left: .5rem; */
+    font-size: 1.4rem;
+    margin-bottom: 1.6rem;
+
+    span{
+        color: red;
+        border-bottom: 3px dashed blue;
+        display: inline-block;
+    }
+}
+
+
+.service-timeout {
+
+    transition: all .9s ease;
+    animation-name: parpadeo;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+
+    -webkit-animation-name: parpadeo;
+    -webkit-animation-duration: 1.2s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+}
+
+@-moz-keyframes parpadeo {
+  0% {
+    transition: all .9s ease;
+    background: rgba(255, 0, 0, 0.63)
+  }
+
+  50% {
+    background: white
+  }
+
+  100% {
+    background: rgba(255, 0, 0, 0.63)
+  }
+}
+
+@-webkit-keyframes parpadeo {
+  0% {
+    background: rgba(255, 0, 0, 0.63)
+  }
+
+  50% {
+    background: white
+  }
+
+  100% {
+    background: rgba(255, 0, 0, 0.63)
+  }
+}
+
+@keyframes parpadeo {
+  0% {
+    background: rgba(255, 0, 0, 0.63)
+  }
+
+  50% {
+    background: white
+  }
+
+  100% {
+    background: rgba(255, 0, 0, 0.63)
+  }
+}

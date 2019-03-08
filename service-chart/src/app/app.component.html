@@ -1,0 +1,15 @@
+<!--The content below is only a placeholder and can be replaced.-->
+
+<div *ngIf="error" class="error">{{error}}</div>
+
+
+
+<div class="content">
+  <chart *ngFor="let service of services" 
+        [serviceData]="service" 
+        [intervalSeconds]="service.intervalSeconds"
+        [titlePrefix]="prefix"
+        >
+       
+  </chart>
+</div>
