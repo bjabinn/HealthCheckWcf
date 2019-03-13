@@ -12,20 +12,24 @@ namespace Back
             {
                 Apellidos = "Gadea",
                 Nombre = "Jose Carlos",
-                Tiempo = 150
+                Tiempo = 2858888
             };
 
             try
             {
-                JsonWriter.WriteJson(model1, path);
-                var service = GDriveService.GetService("HealthCheckWcf","credentials.json");
-                UploadDrive.UploadJson(path, service); 
+                Helpers.WriteJson(model1, path);
+                var service = GDrive.GDriveService.GetService("HealthCheckWcf","GDrive/Files/credentials.json");
+                //GDriveHelper.UploadJson(path, service); 
+                
+                GDrive.GDriveHelper.UpdateJson(path,service);
+                System.Console.WriteLine(GDrive.GDriveHelper.GetFileID("test.json",service));
+
             }
             catch (Exception ex)
             {               
                 Console.WriteLine(ex.Data["ErrorInfo"]);
             }
-            
+     
             Console.WriteLine("Press Enter to exit...");
             Console.ReadLine();
         }  
