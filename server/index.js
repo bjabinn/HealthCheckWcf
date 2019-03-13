@@ -2,14 +2,15 @@ var express = require('express');
 var path = require('path');
 var app = express();
 
+const PORT = 3000;
 
-app.use(express.static('../services-chart/dist/services-chart'));
+app.use(express.static('public'));
 
 
 app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, '../services-chart/dist/services-chart/index.html'));
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(PORT, function () {
+  console.log(`Example app listening localhost:${PORT}`);
 });

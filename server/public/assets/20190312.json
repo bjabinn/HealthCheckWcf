@@ -3,11 +3,17 @@
     [    
         {
             "title": "SubscriptionService",
-            "intervalSeconds": 45,
+            "intervalSeconds": 20,
             "responses": [
                     {
                         "time": 2000,
                         "date" : "16/02/2019 14:16:25"
+                    },
+                    
+
+                    {
+                        "time": 4000,
+                        "date" : "16/02/2019 14:26:25"
                     }
                 ]
         },

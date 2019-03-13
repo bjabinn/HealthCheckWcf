@@ -1,4 +1,4 @@
 export interface ResponseModel {
     time: number,
-    date: Date
+    date: string
 }
