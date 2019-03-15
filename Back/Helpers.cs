@@ -1,4 +1,6 @@
 using Newtonsoft.Json;
+using System.IO;
+using Back.Models;
 
 namespace Back
 {
@@ -35,7 +37,7 @@ namespace Back
             return mimeType;
         }
 
-         public static void WriteJson(object model, string path)
+        public static void WriteJson(object model, string path)
         {
             string jsonString = string.Empty;
 
@@ -51,6 +53,11 @@ namespace Back
             
             try
             {
+                // if (!File.Exists(path))
+                // {
+                //     File.Create(path);
+                // }
+
                 using (System.IO.StreamWriter file = new System.IO.StreamWriter(path) )
                 {
                     file.WriteLine(jsonString);
@@ -61,6 +68,29 @@ namespace Back
                 ex.Data["ErrorInfo"] += string.Format("\nERROR: Failed while writing JSON to file with exception: {0}",ex.Message);
                 throw ex;
             }      
+        }
+
+        public static JsonServicesModel ReadConfig(string path)
+        {
+            var jsonServices = new JsonServicesModel();
+
+            try
+            {
+                using (StreamReader r = new StreamReader(path))
+                {
+                    string json = r.ReadToEnd();
+                    jsonServices = JsonConvert.DeserializeObject<JsonServicesModel>(json);
+                }
+                
+                Helpers.WriteJson(jsonServices, path);
+            }
+            catch (System.Exception e)
+            {
+                e.Data["ErrorInfo"] += string.Format("\nERROR: Failed while reading JSON configuration with exception: {0}",e.Message);
+                throw e;
+            }
+            
+            return jsonServices;
         }
     }
 }
