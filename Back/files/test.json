@@ -1,1 +1,1 @@
-{"services":[{"title":"TestAPICall1","timeoutLimit":500,"intervalSeconds":50,"responses":null},{"title":"TestAPICall2","timeoutLimit":600,"intervalSeconds":60,"responses":null}]}
+{"services":[{"title":"TestAPICall1","url":"https://jsonplaceholder.typicode.com/todos/1","timeoutLimit":500,"intervalSeconds":5,"responses":[{"Time":188,"Date":"16/03/2019 01:57:54.692"}]},{"title":"TestAPICall2","url":"https://jsonplaceholder.typicode.com/photos/1","timeoutLimit":600,"intervalSeconds":10,"responses":[{"Time":59,"Date":"16/03/2019 01:57:54.752"}]}]}

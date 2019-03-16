@@ -10,7 +10,6 @@ namespace Back.Models
     public class Service
     {
         public string title { get; set; }
-        [JsonIgnore]
         public string url { get; set; }
         public int timeoutLimit {get; set; }
         public int intervalSeconds { get; set; }

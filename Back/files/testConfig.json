@@ -1,1 +1,18 @@
-{"services":[{"title":"TestAPICall1","timeoutLimit":500,"intervalSeconds":50,"responses":null},{"title":"TestAPICall2","timeoutLimit":600,"intervalSeconds":60,"responses":null}]}
+{
+    "services": [
+        {
+            "title": "TestAPICall1",
+            "url": "https://jsonplaceholder.typicode.com/todos/1",
+            "timeoutLimit": 500,
+            "intervalSeconds": 5,
+            "responses": null
+        },
+        {
+            "title": "TestAPICall2",
+            "url": "https://jsonplaceholder.typicode.com/photos/1",
+            "timeoutLimit": 600,
+            "intervalSeconds": 10,
+            "responses": null
+        }
+    ]
+}

@@ -31,15 +31,24 @@ namespace Back.APICaller
             }
         }
 
-        public static async Task<Response> MeasureResponse(string url)
+        public static async Task<Response> MeasureResponse(string url, int timeout)
         {
             Stopwatch ResponseTimer = new Stopwatch();
-            ResponseTimer.Start();
-            await CallAPI(url);
-            ResponseTimer.Stop();
 
-            return new Response((int)ResponseTimer.ElapsedMilliseconds,DateTime.Now.ToString());
-            //System.Console.WriteLine("Response time: {0}ms", ResponseTimer.ElapsedMilliseconds);
+            try
+            {
+                ResponseTimer.Start();
+                await CallAPI(url);
+                ResponseTimer.Stop();
+            }
+            catch (System.Exception e)
+            {
+                
+                System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", url, e.Message));
+                
+            }
+            
+            return new Response((int)ResponseTimer.ElapsedMilliseconds,DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.FFF"));
         }
     }    
 }

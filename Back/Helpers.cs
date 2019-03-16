@@ -81,8 +81,6 @@ namespace Back
                     string json = r.ReadToEnd();
                     jsonServices = JsonConvert.DeserializeObject<JsonServicesModel>(json);
                 }
-                
-                Helpers.WriteJson(jsonServices, path);
             }
             catch (System.Exception e)
             {
