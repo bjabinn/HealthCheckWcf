@@ -4,6 +4,7 @@ using System.Net.Http;
 using System;
 using System.Threading.Tasks;
 using Back.Models;
+using Back;
 
 namespace Back.APICaller
 {
@@ -31,10 +32,31 @@ namespace Back.APICaller
             }
         }
 
-        public static async Task<Response> MeasureResponse(string url, int timeout)
+        public static async void MeasureResponse(Service service, int index)
         {
             Stopwatch ResponseTimer = new Stopwatch();
 
+            try
+            {
+                ResponseTimer.Start();
+                await CallAPI(service.url);
+                ResponseTimer.Stop();
+
+                Back.Program._jsonObject.services[index].responses = new Response[1];
+                Back.Program._jsonObject.services[index].responses[0] = new Response((int)ResponseTimer.ElapsedMilliseconds,DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.FFF"));
+            }
+            catch (System.Exception e)
+            {
+                
+                System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", service.url, e.Message));
+                
+            }
+        }
+
+        public static async Task<Response> InitialResponseLoad(string url, int timeoutLimit)
+        {
+            Stopwatch ResponseTimer = new Stopwatch();
+            
             try
             {
                 ResponseTimer.Start();
@@ -43,11 +65,9 @@ namespace Back.APICaller
             }
             catch (System.Exception e)
             {
-                
                 System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", url, e.Message));
-                
             }
-            
+
             return new Response((int)ResponseTimer.ElapsedMilliseconds,DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.FFF"));
         }
     }    

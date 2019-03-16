@@ -90,5 +90,48 @@ namespace Back
             
             return jsonServices;
         }
+
+        public static bool CompareJsonFileWithObject(string path, object obj)
+        {
+            object jsonObj;
+
+            try
+            {
+                using (StreamReader r = new StreamReader(path))
+                {
+                    string json = r.ReadToEnd();
+                    jsonObj = JsonConvert.DeserializeObject<JsonServicesModel>(json);
+                }
+
+                return ( JsonConvert.SerializeObject(obj) == JsonConvert.SerializeObject(jsonObj) );
+
+            }
+            catch (System.Exception e)
+            {
+                e.Data["ErrorInfo"] += string.Format("\nERROR: Failed while comparing JSON file with object with exception: {0}",e.Message);
+                throw e;
+            }
+        }
+
+        public static bool CheckNullResponse(JsonServicesModel jsonObject)
+        {
+            try
+            {
+                foreach (var service in jsonObject.services)
+                {
+                    if (service.responses.Equals(null))
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                e.Data["ErrorInfo"] += string.Format("\nERROR: Failed while checking if response is null with exception: {0}",e.Message);
+                throw e;
+            }
+            
+            return true;
+        }
     }
 }
