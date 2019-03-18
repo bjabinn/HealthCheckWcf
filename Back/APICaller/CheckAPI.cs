@@ -10,7 +10,7 @@ namespace Back.APICaller
 {
     class CheckAPI
     {
-        private static async Task<string> CallAPI(string url)
+        private static async Task<bool> CallAPI(string url, TimeSpan timeOut)
         {
             HttpResponseMessage response = null;
 
@@ -18,28 +18,34 @@ namespace Back.APICaller
             {
                 try	
                 {
+                    client.Timeout = timeOut;
                     response = await client.GetAsync(url);
                     response.EnsureSuccessStatusCode();
-                    string responseBody = await response.Content.ReadAsStringAsync();
+                    // string responseBody = await response.Content.ReadAsStringAsync();
 
-                    return responseBody;
+                    // return responseBody.;
+                    return true;
                 }  
                 catch(HttpRequestException e)
                 {
-                    e.Data["ErrorInfo"] += string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", url, e.Message);
-                    throw e;
+                    System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", url, e.Message));
+                    return false;
+                }
+                catch(TaskCanceledException ex)
+                {
+                    return false;
                 }
             }
         }
 
-        public static async void MeasureResponse(Service service, int index)
+        public static async void MeasureResponse(Service service, int index, TimeSpan timeOut)
         {
             Stopwatch ResponseTimer = new Stopwatch();
 
             try
             {
                 ResponseTimer.Start();
-                await CallAPI(service.url);
+                await CallAPI(service.url, timeOut);
                 ResponseTimer.Stop();
 
                 Back.Program._jsonObject.services[index].responses = new Response[1];
@@ -47,20 +53,18 @@ namespace Back.APICaller
             }
             catch (System.Exception e)
             {
-                
                 System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", service.url, e.Message));
-                
             }
         }
 
-        public static async Task<Response> InitialResponseLoad(string url, int timeoutLimit)
+        public static async Task<Response> InitialResponseLoad(string url, TimeSpan timeOut)
         {
             Stopwatch ResponseTimer = new Stopwatch();
             
             try
             {
                 ResponseTimer.Start();
-                await CallAPI(url);
+                await CallAPI(url, timeOut);
                 ResponseTimer.Stop();
             }
             catch (System.Exception e)

@@ -37,7 +37,7 @@ namespace Back
                             System.Console.WriteLine("Lanzarlo" + " " + service.title + " " + DateTime.Now);
 
                             service.responses = new Response[1];
-                            APICaller.CheckAPI.MeasureResponse(service, counter);
+                            APICaller.CheckAPI.MeasureResponse(service, counter, TimeSpan.FromMilliseconds(service.timeoutLimit));
 
                         }
                         counter++;
@@ -71,7 +71,7 @@ namespace Back
             {
                 _jsonObject.services[counter].responses = new Response[1];
 
-                _jsonObject.services[counter].responses[0] = APICaller.CheckAPI.InitialResponseLoad(service.url, service.timeoutLimit).Result;
+                _jsonObject.services[counter].responses[0] = APICaller.CheckAPI.InitialResponseLoad(service.url, TimeSpan.FromMilliseconds(service.timeoutLimit)).Result;
                 counter++;
             }
 

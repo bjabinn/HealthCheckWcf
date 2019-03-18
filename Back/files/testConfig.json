@@ -3,7 +3,7 @@
         {
             "title": "TestAPICall1",
             "url": "https://jsonplaceholder.typicode.com/todos/1",
-            "timeoutLimit": 500,
+            "timeoutLimit": 50,
             "intervalSeconds": 10,
             "responses": null
         },
