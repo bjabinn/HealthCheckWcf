@@ -19,22 +19,7 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
   
   
   ngAfterViewChecked(): void {
-    // let boxHeight = this.serviceBox.nativeElement.offsetHeight ; 
-    // let chartHeight = boxHeight - 44;  //44 = title size
-
-    // if(this.canvas.nativeElement.offsetHeight > chartHeight){
-    //   const difference = this.canvas.nativeElement.offsetHeight - chartHeight;
-
-    //   this.canvasHeight = chartHeight;
-    //   console.log("Offwidth",this.canvas.nativeElement.offsetWidth);
-      
-    //   this.canvasWidth = this.canvas.nativeElement.offsetWidth - difference;
-      
-      
-    // }
-    
-    // this.ch.chart.update();
-    
+   
     
   }
   
