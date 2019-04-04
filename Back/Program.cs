@@ -5,6 +5,8 @@ using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
+using ServiceReference2;
+
 namespace Back
 {
     class Program
@@ -25,22 +27,40 @@ namespace Back
 
                 IntitialLoad(outputPath, GService, configuration);
 
+                //Cambiar while(true)
                 while (true)
                 {
                     counter = 0;
                     foreach (var service in _jsonObject.services)
                     {
-                        TimeSpan interval = TimeSpan.FromSeconds(service.intervalSeconds);
-                        if (DateTime.Now.Subtract(DateTime.Parse(service.responses[service.responses.Length - 1].Date)) > interval)
+                        //Tipo                              
+                        if (service.type == "REST") //Funciona mejor con paradas
                         {
+                            TimeSpan interval = TimeSpan.FromSeconds(service.intervalSeconds);
+                            if (DateTime.Now.Subtract(DateTime.Parse(service.responses[service.responses.Length - 1].Date)) > interval)
+                            {
 
-                            System.Console.WriteLine("Lanzarlo" + " " + service.title + " " + DateTime.Now);
+                                System.Console.WriteLine("Lanzarlo" + " " + service.title + " " + DateTime.Now + " --REST-- " );
 
-                            service.responses = new Response[1];
-                            APICaller.CheckAPI.MeasureResponse(service, counter, TimeSpan.FromMilliseconds(service.timeoutLimit));
-
+                                service.responses = new Response[1];
+                                APICaller.CheckAPI.MeasureResponse(service, counter, TimeSpan.FromMilliseconds(service.timeoutLimit));
+                            }
+                            counter++;
                         }
-                        counter++;
+                        else if (service.type == "WCF")
+                        {
+                            TimeSpan interval = TimeSpan.FromSeconds(service.intervalSeconds);
+                            if (DateTime.Now.Subtract(DateTime.Parse(service.responses[service.responses.Length - 1].Date)) > interval)
+                            {
+
+                                System.Console.WriteLine("Lanzarlo" + " " + service.title + " " + DateTime.Now + " --WCF-- " );
+
+                                service.responses = new Response[1];
+                                APICaller.CheckAPI.MeasureResponse(service, counter, TimeSpan.FromMilliseconds(service.timeoutLimit));
+
+                            }
+                            counter++;
+                        }
                     }
                     var jsonObject = _jsonObject;
 
@@ -51,9 +71,8 @@ namespace Back
                     }
 
                     System.Threading.Thread.Sleep(pollingRate);
-                }
             }
-
+            }
             catch (Exception ex)
             {               
                 Console.WriteLine(ex.Data["ErrorInfo"]);
@@ -71,7 +90,8 @@ namespace Back
             {
                 _jsonObject.services[counter].responses = new Response[1];
 
-                _jsonObject.services[counter].responses[0] = APICaller.CheckAPI.InitialResponseLoad(service.url, TimeSpan.FromMilliseconds(service.timeoutLimit)).Result;
+                _jsonObject.services[counter].responses[0] =
+                 APICaller.CheckAPI.InitialResponseLoad(service.url, TimeSpan.FromMilliseconds(service.timeoutLimit), service).Result;
                 counter++;
             }
 

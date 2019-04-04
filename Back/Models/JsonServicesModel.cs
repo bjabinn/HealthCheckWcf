@@ -11,6 +11,8 @@ namespace Back.Models
     {
         public string title { get; set; }
         public string url { get; set; }
+        public string type { get; set; }
+        public string method { get; set; }
         public int timeoutLimit {get; set; }
         public int intervalSeconds { get; set; }
         public Response[] responses { get; set; }

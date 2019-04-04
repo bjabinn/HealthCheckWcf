@@ -1,18 +1,40 @@
 {
-    "services": [
-        {
-            "title": "TestAPICall1",
-            "url": "https://jsonplaceholder.typicode.com/todos/1",
-            "timeoutLimit": 50,
-            "intervalSeconds": 10,
-            "responses": null
-        },
-        {
-            "title": "TestAPICall2",
-            "url": "https://jsonplaceholder.typicode.com/photos/1",
-            "timeoutLimit": 600,
-            "intervalSeconds": 20,
-            "responses": null
-        }
-    ]
+  "services": [
+    {
+      "title": "TestAPICallREST1",
+      "url": "https://jsonplaceholder.typicode.com/todos/1",
+      "type": "REST",
+      "timeoutLimit": 2500,
+      "intervalSeconds": 10,
+      "responses": null
+    },
+    {
+      "title": "TestAPICallREST2",
+      "url": "https://jsonplaceholder.typicode.com/photos/1",
+      "type": "REST",
+      "timeoutLimit": 2500,
+      "intervalSeconds": 20,
+      "responses": null
+    },
+    {
+      "title": "TestAPICallWCF1",
+      "url": "http://localhost:49843/ServicioWCF.svc",
+      "type": "WCF",
+      "method": "MostrarMensajeAsync",
+      "timeoutLimit": 150,
+      "intervalSeconds": 10,
+      "responses": null
+    },
+    {
+      "title": "TestAPICallWCF2",
+      "url": "http://localhost:49843/ServicioWCF.svc",
+      "type": "WCF",
+      "method": "MostrarMensajeAsync",
+      "timeoutLimit": 150,
+      "intervalSeconds": 20,
+      "responses": null
+    }
+  ]
+
+
 }

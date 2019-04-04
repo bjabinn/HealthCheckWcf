@@ -1,1 +1,50 @@
-{"services":[{"title":"TestAPICall1","url":"https://jsonplaceholder.typicode.com/todos/1","timeoutLimit":500,"intervalSeconds":10,"responses":[{"Time":62,"Date":"16/03/2019 14:22:25.541"}]},{"title":"TestAPICall2","url":"https://jsonplaceholder.typicode.com/photos/1","timeoutLimit":600,"intervalSeconds":20,"responses":[{"Time":64,"Date":"16/03/2019 14:22:25.544"}]}]}
+{
+  "services": [
+    {
+      "title": "TestAPICallREST1",
+      "url": "https://jsonplaceholder.typicode.com/todos/1",
+      "type":  "REST",
+      "timeoutLimit": 50,
+      "intervalSeconds": 10,
+      "responses": [ null ]
+    },
+    {
+      "title": "TestAPICallREST2",
+      "url": "https://jsonplaceholder.typicode.com/photos/1",
+      "type":  "REST",
+      "timeoutLimit": 600,
+      "intervalSeconds": 20,
+      "responses": [
+        {
+          "Time": 610,
+          "Date": "04/04/2019 08:32:19.108"
+        }
+      ]
+    },
+
+    {
+      "title": "TestAPICallWCF1",
+      "url": "http://localhost:49843/ServicioWCF.svc",
+      "type": "WCF",
+      "method": "MostrarMensajeAsync",
+      "timeoutLimit": 50,
+      "intervalSeconds": 10,
+      "responses": [ null ]
+    },
+    {
+      "title": "TestAPICallWCF2",
+      "url": "http://localhost:49843/ServicioWCF.svc",
+      "type": "WCF",
+      "method": "MostrarMensajeAsync",
+      "timeoutLimit": 600,
+      "intervalSeconds": 20,
+      "responses": [
+        {
+          "Time": 610,
+          "Date": "04/04/2019 08:32:19.108"
+        }
+      ]
+    }
+  ]
+
+}

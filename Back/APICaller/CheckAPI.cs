@@ -5,34 +5,57 @@ using System;
 using System.Threading.Tasks;
 using Back.Models;
 using Back;
+using ServiceReference2;
+using Microsoft.Owin;
+
 
 namespace Back.APICaller
 {
     class CheckAPI
     {
-        private static async Task<bool> CallAPI(string url, TimeSpan timeOut)
+        private static async Task<bool> CallAPIrest(string url, TimeSpan timeOut)
         {
             HttpResponseMessage response = null;
-
+            //Detecta fallo al llamar pero no dentro
             using (HttpClient client = new HttpClient())
             {
-                try	
+                try
                 {
                     client.Timeout = timeOut;
                     response = await client.GetAsync(url);
                     response.EnsureSuccessStatusCode();
-                    // string responseBody = await response.Content.ReadAsStringAsync();
-
-                    // return responseBody.;
+                    
                     return true;
-                }  
-                catch(HttpRequestException e)
+                }
+                catch (Exception e)
+                {
+                System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", url, e.Message));
+                return false;
+                }
+        }
+        }
+
+        private static async Task<bool> CallAPIwcf(string url, TimeSpan timeOut) 
+        {
+            HttpResponseMessage response = null;
+
+            var cliente = new ConexionWCFClient();
+            var respuesta = await cliente.MostrarMensajeAsync();
+           
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    client.Timeout = timeOut;
+                    response = await client.GetAsync(url);
+                    response.EnsureSuccessStatusCode();
+                    System.Console.WriteLine(respuesta + "--WCF--");
+
+                    return true;
+                }
+                catch (Exception e)
                 {
                     System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", url, e.Message));
-                    return false;
-                }
-                catch(TaskCanceledException ex)
-                {
                     return false;
                 }
             }
@@ -42,36 +65,73 @@ namespace Back.APICaller
         {
             Stopwatch ResponseTimer = new Stopwatch();
 
-            try
+            if(service.type == "REST") 
             {
-                ResponseTimer.Start();
-                await CallAPI(service.url, timeOut);
-                ResponseTimer.Stop();
+                try
+                {
+                    ResponseTimer.Start();
+                    await CallAPIrest(service.url, timeOut);
+                    ResponseTimer.Stop();
 
-                Back.Program._jsonObject.services[index].responses = new Response[1];
-                Back.Program._jsonObject.services[index].responses[0] = new Response((int)ResponseTimer.ElapsedMilliseconds,DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.FFF"));
+                    Back.Program._jsonObject.services[index].responses = new Response[1];
+                    Back.Program._jsonObject.services[index].responses[0] = new Response((int)ResponseTimer.ElapsedMilliseconds, DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.FFF"));
+                    Console.WriteLine(ResponseTimer.ElapsedMilliseconds);
+                }
+
+                catch (System.Exception e)
+                {
+                    System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", service.url, e.Message));
+                }
             }
-            catch (System.Exception e)
+            else if (service.type == "WCF")
             {
-                System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", service.url, e.Message));
+                try
+                {
+                    ResponseTimer.Start();
+                    await CallAPIwcf(service.url, timeOut);
+                    ResponseTimer.Stop();
+
+                    Back.Program._jsonObject.services[index].responses = new Response[1];
+                    Back.Program._jsonObject.services[index].responses[0] = new Response((int)ResponseTimer.ElapsedMilliseconds, DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.FFF"));
+                    Console.WriteLine(ResponseTimer.ElapsedMilliseconds);
+                }
+                catch (System.Exception e)
+                {
+                    System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", service.url, e.Message));
+                }
             }
         }
 
-        public static async Task<Response> InitialResponseLoad(string url, TimeSpan timeOut)
+        public static async Task<Response> InitialResponseLoad(string url, TimeSpan timeOut, Service service)
         {
             Stopwatch ResponseTimer = new Stopwatch();
-            
-            try
-            {
-                ResponseTimer.Start();
-                await CallAPI(url, timeOut);
-                ResponseTimer.Stop();
+           
+                if(service.type == "REST")
+                {
+                try
+                {
+                    ResponseTimer.Start();
+                            await CallAPIrest(url, timeOut);
+                            ResponseTimer.Stop();
+                }
+                catch (System.Exception e)
+                {
+                    System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", url, e.Message));
+                }
             }
-            catch (System.Exception e)
-            {
-                System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", url, e.Message));
-            }
-
+                else if(service.type == "WCF")
+                {
+                    try
+                        {
+                            ResponseTimer.Start();
+                            await CallAPIwcf(url, timeOut);
+                            ResponseTimer.Stop();
+                        }catch(System.Exception e)
+                        {
+                            System.Console.WriteLine(string.Format("\nERROR: Failed while contacting API in \"{0}\" with exception: {1}", url, e.Message));
+                        }
+                }
+                    
             return new Response((int)ResponseTimer.ElapsedMilliseconds,DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.FFF"));
         }
     }    
