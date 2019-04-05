@@ -1,0 +1,10 @@
+{
+  "configuracion": [
+    {
+      "configPath": "files/testConfig.json",
+      "outputPath": "files/test.json",
+      "pollingRate": "2000"
+    }
+  ]
+}
+

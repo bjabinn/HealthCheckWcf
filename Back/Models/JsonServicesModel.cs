@@ -5,6 +5,7 @@ namespace Back.Models
     public class JsonServicesModel
     {
         public Service[] services { get; set; }
+        public Configuracion[] configuracion { get; set; }
     }
 
     public class Service
@@ -28,4 +29,12 @@ namespace Back.Models
         public int Time { get; set; }
         public string Date { get; set; }
     }
+
+    public class Configuracion
+    {
+        public string configPath { get; set; }
+        public string outputPath { get; set; }
+        public int pollingRate { get; set; }
+    }
+
 }

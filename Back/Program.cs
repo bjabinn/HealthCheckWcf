@@ -4,8 +4,14 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Configuration;
 
 using ServiceReference2;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore;
+using System.Linq;
+using Configuration = System.Configuration.Configuration;
 
 namespace Back
 {
@@ -14,18 +20,24 @@ namespace Back
         public static JsonServicesModel _jsonObject = new JsonServicesModel();
         static void Main(string[] args)
         {
-            const string configPath = "files/testConfig.json";
-            const string outputPath = "files/test.json";
-            const int pollingRate = 2000;          
+            string json = @"{
+                    'configPath': 'files/testConfig.json',
+                    'outputPath': 'files/test.json',
+                    'pollingRate': 2000
+                  }";           
 
             try
             {
+                Configuracion config = JsonConvert.DeserializeObject<Configuracion>(json);
+
                 var GService = GDriveService.GetService("HealthCheckWcf", "GDrive/Files/credentials.json");
-                var configuration = Helpers.ReadConfig(configPath);
+                var configuration = Helpers.ReadConfig(config.configPath);
+               
+
                 int counter = 0;
                 _jsonObject = configuration;
 
-                IntitialLoad(outputPath, GService, configuration);
+                IntitialLoad(config.outputPath, GService, configuration);
 
                 //Cambiar while(true)
                 while (true)
@@ -64,13 +76,13 @@ namespace Back
                     }
                     var jsonObject = _jsonObject;
 
-                    if (!Helpers.CompareJsonFileWithObject(outputPath,jsonObject) && Helpers.CheckNullResponse(jsonObject))
+                    if (!Helpers.CompareJsonFileWithObject(config.outputPath,jsonObject) && Helpers.CheckNullResponse(jsonObject))
                     {
-                        Helpers.WriteJson(_jsonObject, outputPath);
-                        GDrive.GDriveService.UpdateJson(outputPath, GService);
+                        Helpers.WriteJson(_jsonObject, config.outputPath);
+                        GDrive.GDriveService.UpdateJson(config.outputPath, GService);
                     }
 
-                    System.Threading.Thread.Sleep(pollingRate);
+                    System.Threading.Thread.Sleep(config.pollingRate);
             }
             }
             catch (Exception ex)
@@ -81,6 +93,7 @@ namespace Back
             Console.WriteLine("Press Enter to exit...");
             Console.ReadLine();
         }
+
 
         private static void IntitialLoad(string outputPath, Google.Apis.Drive.v3.DriveService GService, JsonServicesModel configuration)
         {

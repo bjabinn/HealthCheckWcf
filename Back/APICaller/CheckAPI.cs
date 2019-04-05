@@ -16,7 +16,6 @@ namespace Back.APICaller
         private static async Task<bool> CallAPIrest(string url, TimeSpan timeOut)
         {
             HttpResponseMessage response = null;
-            //Detecta fallo al llamar pero no dentro
             using (HttpClient client = new HttpClient())
             {
                 try

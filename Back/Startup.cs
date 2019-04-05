@@ -12,15 +12,18 @@ using Microsoft.Extensions.DependencyInjection;
 using IHostingEnvironment = Microsoft.Extensions.Hosting.IHostingEnvironment;
 using ServiceReference2;
 using Microsoft.Extensions.Hosting;
-
-
+using Microsoft.AspNetCore;
 
 namespace Back
 {
     public class Startup
     {
+
+       
         public void Configuration(IAppBuilder app)
         {
+                  
+
             app.Use((context, next) =>
             {
                 TextWriter output = context.Get<TextWriter>("host.TraceOutput");
@@ -43,6 +46,7 @@ namespace Back
         {
             return DateTime.Now.Millisecond.ToString();
         }
+
 
     }
 }
