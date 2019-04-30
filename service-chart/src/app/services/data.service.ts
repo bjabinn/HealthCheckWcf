@@ -19,7 +19,7 @@ export class DataService {
       const day = ("0"+this.today.getDate()).substr(-2);      
       
       this._jsonName = `${year}${month}${day}`;
-      this._jsonURL = `assets/${this._jsonName}.json`;
+      this._jsonURL = `assets/test.json`;
       
       
   }

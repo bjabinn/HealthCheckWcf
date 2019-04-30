@@ -1,0 +1,31 @@
+{
+    "services": [
+        {
+            "title": "Notification",
+            "url": "http://localhost:81/NotificationService/NotificationService.svc",
+            "type": "WCF",
+            "timeoutLimit": 15000,
+            "intervalSeconds": 10,
+            "responses": [
+                {
+                    "Time": 34,
+                    "Date": "26/04/2019 10:08:17.587"
+                }
+            ]
+        },
+        {
+            "title": "Subscription",
+            "url": "http://localhost:81/SubscriptionService/SubscriptionService.svc",
+            "type": "WCF",
+            "timeoutLimit": 15000,
+            "intervalSeconds": 20,
+            "responses": [
+                {
+                    "Time": 34,
+                    "Date": "26/04/2019 10:08:17.587"
+                }
+            ]
+        }
+    ],
+    "configuracion": null
+}

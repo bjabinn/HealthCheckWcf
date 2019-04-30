@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 using Back.Models;
 using Back;
 using ServiceReference2;
-using Microsoft.Owin;
+
+using Notification;
+using Scheduler;
+using Subscription;
+using System.ServiceModel;
+
 
 
 namespace Back.APICaller
@@ -38,9 +43,24 @@ namespace Back.APICaller
         {
             HttpResponseMessage response = null;
 
-            var cliente = new ConexionWCFClient();
-            var respuesta = await cliente.MostrarMensajeAsync();
-           
+            //var cliente = new ConexionWCFClient();
+            //var respuesta = await cliente.MostrarMensajeAsync();
+
+
+            //var cliente = new SubscriptionServiceClient();
+            //var userId = new Subscription.UserIdentity();
+
+            //userId.Id = "3009271842";
+
+            //var context = new Subscription.CallContext();
+            //context.business = "Grocery";
+            //context.channel = "Subscriptions";
+            //context.LanguageField = "EN";
+            //context.RegionField = "GB";
+            //context.UserIdentityField = userId;
+
+            //var respuesta = await cliente.GetAllSegmentsAsync(context);
+
             using (HttpClient client = new HttpClient())
             {
                 try

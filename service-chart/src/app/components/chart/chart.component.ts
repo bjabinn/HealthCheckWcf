@@ -8,22 +8,16 @@ import { Service } from 'src/app/models/service';
 import { DataService } from 'src/app/services/data.service';
 import { ResponseModel } from 'src/app/models/response-model';
 
-
-
 @Component({
   selector: 'chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss']
 })
+
 export class ChartComponent implements AfterViewInit,AfterViewChecked {
-  
-  
-  ngAfterViewChecked(): void {
-   
-    
+  ngAfterViewChecked(): void {  
   }
   
-
   @Input()
   serviceData: Service;
 
@@ -48,22 +42,19 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
           position: 'left',
           ticks: {        
             min: 0,  
-            max: 1000,
+            max: 600,
           },
           scaleLabel: {
             display: true,
             labelString: 'Response time (ms)',
-          },
-          
-        }
-
-        
+          },         
+        }     
       ],
       xAxes: [{
         gridLines: {
           display:false,
         },
-        maxBarThickness : 40
+        maxBarThickness : 80
       }]
     },
     tooltips: {
@@ -78,44 +69,7 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
       intersect: false,
     },
     annotation: {
-      annotations: [
-        // {
-        //   type: 'line',
-        //   mode: 'horizontal',
-        //   scaleID: 'responsetime',
-        //   value: '2500',
-        //   borderColor: 'orange',
-        //   borderWidth: 2,
-        //   label: {
-        //     enabled: true,
-        //     fontColor: 'orange',
-        //     content: 'Slow response'
-        //   }
-        // },
-        // {
-        //   type: 'line',
-        //   mode: 'horizontal',
-        //   scaleID: 'responsetime',
-        //   value: '4800',
-        //   yAxisID: 'Oil',
-        //   borderColor: 'red',
-        //   borderWidth: 2,
-        //   label: {
-        //     enabled: true,
-        //     fontColor: 'red',
-        //     content: 'Timeout'
-        //   }
-        // },
-        // {
-        //   type: 'box',
-        //   yScaleID: 'Oil',
-        //   yMin: 104,
-        //   yMax: 130,
-        //   backgroundColor: 'rgba(0,255,0,0.15)',
-        //   borderColor: 'rgba(0,255,0,0.05)',
-        //   borderWidth: 0,
-        // },
-       
+      annotations: [      
       ]
     }
   };
@@ -128,12 +82,15 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
   public canvasWidth: number = null;
   public canvasHeight: number = null;
   public newResponseValueFromJson: Response;
+
+  private _jsonURL : string;
+  private _jsonName : string;
+  private today : Date ;
+  private answer : number;
+  private service;
  
-
   @ViewChild(BaseChartDirective) ch: BaseChartDirective;
-
   @ViewChild('canvas') canvas : ElementRef;
-
   @ViewChild('serviceBox') serviceBox: ElementRef;
 
   dataSeries: DataSeries[] = [
@@ -145,47 +102,21 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
       units: 'fahrenheit',
       activeInBypassMode: true,
     },
-    // {
-    //   index: 1,
-    //   axisId: 'Water',
-    //   colorName: 'green',
-    //   label: 'Cristina suki',
-    //   units: 'celsius',
-    //   activeInBypassMode: true,
-    // },
   ];
 
   constructor(private dataService: DataService) {
     Chart.pluginService.register(annotationsPlugin);
-    this.initDataSeries();
-    
+    this.initDataSeries();  
   }
 
-
-  ngOnInit() {
-    
+  ngOnInit() {    
     //seconds to wait for every request
     this.refreshData(this.intervalSeconds);
- 
   }
 
-  ngAfterViewInit(): void {
-    
-    // let boxHeight = this.serviceBox.nativeElement.offsetHeight ; 
-    // let chartHeight = boxHeight - 44;  //44 = title size
-
-    // if(this.canvas.nativeElement.offsetHeight > chartHeight){
-    //   const difference = this.canvas.nativeElement.offsetHeight - chartHeight;
-
-    //   this.canvasHeight = chartHeight;
-    //   this.canvasWidth = this.canvas.nativeElement.offsetWidth - difference;
-      
-      
-    // }
-    
+  ngAfterViewInit(): void {  
     this.ch.chart.update();
   }
-
 
   refreshData(seconds:number){
     setInterval(()=>{
@@ -193,54 +124,49 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
       this.serviceData.notifyTimeout = false;
 
       this.dataService.getJSON().subscribe(data=>{
-          const service = data.services.find(x => x.title == this.serviceData.title);
-          console.log(service);
+          this.service = data.services.find(x => x.title == this.serviceData.title);
+          console.log(this.service.responses[0].Time);
+          //this.service.addHeader("Access-Control-Allow-Origin", "*");
 
-          if(service){
-            const responsesToUpdate = service.responses;
-            this.checkResponsesInLocalStorageAndUpdate(service);
-            
+          if(this.service){
+            const responsesToUpdate = this.service.responses;            
+            this.checkResponsesInLocalStorageAndUpdate(this.service);
           }
-          
       });
+
+      this.today = new Date(); 
+
+      //this._jsonName = `${year}${month}${day}`;
+      this._jsonName = `test`;
+      this._jsonURL = "assets/test.json";
 
 
       // ---***** MOCKING DATA TO UPDATE CHART -- TO BE COMMENTED IN PROD ******----
-      const now = new Date();
-      const minutes = ("0"+now.getMinutes()).substr(-2);
-      const nowSeconds = ("0"+now.getSeconds()).substr(-2);
-      const hourTimeString = `${now.getHours()}:${minutes}:${nowSeconds}`;
-      
-      let randomNumber = this.getRandomArbitrary(380,550);
+      const minutes = this.service.responses[0].Date.substr(14,2);
+      const nowSeconds = this.service.responses[0].Date.substr(17, 2);
+      const hour = this.service.responses[0].Date.substr(11, 2);
+      const hourTimeString = `${hour}:${minutes}:${nowSeconds}`;
 
-      if(randomNumber > 549){
+      this.answer = this.service.responses[0].Time;      
+
+      if(this.answer > 15000){
         this.serviceData.notifyTimeout = true;
-        this.barChartData[0].data.push(5200); 
-        // if(seconds > 90){
-        //   setTimeout(()=> {this.serviceData.notifyTimeout = false; console.log("90 segundos parpadeando terminado")},90);
-        // }
       }else{
-        this.barChartData[0].data.push(randomNumber);
+        this.barChartData[0].data.push(this.answer);
       }
 
       this.barChartLabels.push(hourTimeString);
 
-      if(randomNumber > 549){
+      if(this.answer > 549){
         //Change options to add annotations
         this.setBarChartOptionsAnnotations();
       }
 
-      this.ch.chart.config.data.options = this.barChartOptions;
-      
-     
+      //this.ch.chart.config.data.options = this.barChartOptions;   
       this.ch.chart.update();
       // [END]  ---***** MOCKING DATA TO UPDATE CHART -- COMMENTED IN PROD ******----
-
-
     }, seconds*1000);
   }
-
-
 
   private setBarChartOptionsAnnotations() {
     this.barChartOptions = {
@@ -257,7 +183,7 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
             position: 'left',
             ticks: {
               min: 0,
-              max: 5500,
+              max: this.service.responses.Timeout
             },
             scaleLabel: {
               display: true,
@@ -285,24 +211,24 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
       },
       annotation: {
         annotations: [
+          // {
+          //   type: 'line',
+          //   mode: 'horizontal',
+          //   scaleID: 'responsetime',
+          //   value: '2500',
+          //   borderColor: 'orange',
+          //   borderWidth: 1,
+          //   label: {
+          //     enabled: true,
+          //     fontColor: 'orange',
+          //     content: 'Slow response'
+          //   }
+          // },
           {
             type: 'line',
             mode: 'horizontal',
             scaleID: 'responsetime',
-            value: '2500',
-            borderColor: 'orange',
-            borderWidth: 1,
-            label: {
-              enabled: true,
-              fontColor: 'orange',
-              content: 'Slow response'
-            }
-          },
-          {
-            type: 'line',
-            mode: 'horizontal',
-            scaleID: 'responsetime',
-            value: '4800',
+            value: this.service.responses.Timeout,
             yAxisID: 'Oil',
             borderColor: 'red',
             borderWidth: 1,
@@ -345,7 +271,6 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
   }
 
 
-
   getDateModelFromJson(date: string): any {
     const dateString = date.split(" ")[0];
     const timeString = date.split(" ")[1];
@@ -363,16 +288,17 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
     return new Date(year,month,day,hour,minute,seconds)
   }
 
-
   iterateResponsesAndUpdate(service: Service): any {
     const lastItemStored: Service = JSON.parse(localStorage.getItem(service.title));
-    const lastDateStored =  this.getDateModelFromJson(lastItemStored.responses[0].date);
+    const lastDateStored =  this.getDateModelFromJson(lastItemStored.responses[0].Date);
 
     const responsesArrayToPush: ResponseModel[] = [];
 
+
+
     for (let i = 0; i < service.responses.length; i++) {
 
-      const iteratedDate = this.getDateModelFromJson(service.responses[i].date);
+      const iteratedDate = this.getDateModelFromJson(service.responses[i].Date);
 
       //If response date from JSON of the Service is different and greater than the last one we have stored in localStorage
       if (iteratedDate !== lastDateStored && iteratedDate > lastDateStored) {
@@ -382,11 +308,12 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
 
     //New responses to push in chart and localStorage
     if(responsesArrayToPush.length > 0){
-      
+    
       if(responsesArrayToPush.length > 1){
         responsesArrayToPush.forEach(response => {
-            this.barChartData[0].data.push(response.time); 
-            this.barChartLabels.push(response.date);
+            this.barChartData[0].data.push(response.Time); 
+            this.barChartLabels.push(response.Date);
+
         });
 
         const lastElement = responsesArrayToPush[responsesArrayToPush.length-1];
@@ -401,7 +328,7 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
         }
       
         localStorage.setItem(service.title , JSON.stringify(newObject));
-        this.ch.chart.config.data.options = this.barChartOptions;
+        //this.ch.chart.config.data.options = this.barChartOptions;
         this.ch.chart.update();
       }else{
 
@@ -416,10 +343,6 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
 
       }
     }
-  }
-
-  getRandomArbitrary(min, max) {
-    return Math.random() * (max - min) + min;
   }
 
   initDataSeries() {
@@ -448,25 +371,12 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
     }));
 
     const now = new Date();
-    //   const minutes = ("0"+now.getMinutes()).substr(-2);
-    //   const seconds = ("0"+now.getSeconds()).substr(-2);
-    //   const hourTimeString = `${now.getHours()}:${minutes}:${seconds}`;
-      
-    // this.barChartLabels = [
-    //   hourTimeString,
-    //   hourTimeString,
-    //   hourTimeString,
-    //   hourTimeString,
-    //   hourTimeString,
-    //   hourTimeString,
-    //   hourTimeString,
-    // ];
 
     let i = 0;
     // MOCKING DATA
     for (let index = 0; index < 700 / 5; index++) {
 
-      this.barChartData[0].data.push(this.getRandomArbitrary(380, 550));
+      this.barChartData[0].data.push(this.answer);
       if(i > 59){
         i = 0;
       }
@@ -479,15 +389,5 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
       i++;
 
     }
-
- 
-
-    // this.barChartData[0].data = [
-    //   100,1000,120,50,1220,130,100
-    // ];
-
-    // this.barChartData[1].data = [
-    //   5, 13, 15.6, 16.2, 18.4, 19.8, 22, 24.4, 26
-    // ];
   }
 }

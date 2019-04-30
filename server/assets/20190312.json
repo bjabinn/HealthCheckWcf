@@ -1,0 +1,54 @@
+{
+    "services":
+    [    
+        {
+            "title": "SubscriptionService",
+            "intervalSeconds": 20,
+            "responses": [
+                    {
+                        "time": 2000,
+                        "date" : "16/02/2019 14:16:25"
+                    },
+                    
+
+                    {
+                        "time": 4000,
+                        "date" : "16/02/2019 14:26:25"
+                    }
+                ]
+        },
+        {
+            "title": "SchedulerService",
+            "intervalSeconds": 90,
+            "responses": [
+                    {
+                        "time": 500,
+                        "date" : "16/02/2019 14:16:25"
+                    }
+                ]
+                    
+        },
+
+        {
+            "title": "NotificationService",
+            "intervalSeconds": 60,
+            "responses": [
+                    {
+                        "time": 2000,
+                        "date" : "16/02/2019 14:16:25"
+                    }
+                ]
+        },
+
+        {
+            "title": "IdentityAPI",
+            "intervalSeconds": 60,
+            "responses": [
+                    {
+                        "time": 2000,
+                        "date" : "16/02/2019 14:16:25"
+                    }
+                ]
+        }
+    ]
+}
