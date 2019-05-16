@@ -1,6 +1,7 @@
-const fs = require('fs');
+const fs = require('graceful-fs');
 const readline = require('readline');
 const {google} = require('googleapis');
+
 
 // If modifying these scopes, delete token.json.
 const SCOPES = [
@@ -87,7 +88,7 @@ function listFiles(auth) {
     drive.files.list({
     pageSize: 10,
     fields: 'nextPageToken, files(id, name)',
-  }, (err, res) => {
+  }, function(err, res) {
     if (err) return console.log('The API returned an error: ' + err);
     let files = res.data.files;
     if (files.length) {
@@ -99,8 +100,9 @@ function listFiles(auth) {
       console.log('No files found.');
     };   
     downloadFile(auth);  
-    setInterval(repeat(), 5000);  
+    setInterval(function(){repeat()}, 5000);  
   });
+  
 }
 
 //Authorize the function to be used again
@@ -119,26 +121,45 @@ function repeat(){
   setTimeout(listFiles, 5000);
 }
 
+
+
 //Download the file from Google Drive
-async function downloadFile(auth) {
+function downloadFile(auth) {
 console.log("DOWNLOAD: ", fileId);
   
  let drive = google.drive({version: "v3", auth});
  var dest = fs.createWriteStream('C:/Users/dagarcma/Desktop/app/HealthCheckWcf/service-chart/src/assets/test.json');
- var hist = fs.createWriteStream('C:/Users/dagarcma/Desktop/historico/historia.txt');
- hist.write(fileId);
+ let read = fs.readFileSync('C:/Users/dagarcma/Desktop/app/HealthCheckWcf/service-chart/src/assets/test.json','utf8', (err, contents) => {
+  if (err) throw err;  
+  console.log(contents);
+ }, downloadFile);
 
- drive.files.get({fileId: fileId, alt: "media"}, {responseType: "stream"},
+
+  drive.files.get({fileId: fileId, alt: "media"}, {responseType: "stream"},
   function(err, res){
-     res.data
-     .on("end", () => {
-        console.log("Done");
-     })
-     .on("error", err => {
-        console.log("Error", err);
-     })
-     .pipe(dest);
+      res.data
+      .on("end", () => {
+         console.log("Done");
+      })
+      .on("error", err => {
+         console.log("Error", err);
+      })
+      .pipe(dest);  
   });
+
+
+  var date = new Date();
+  var current_hour = date.getHours();
+  var i = 0;
+  
+  fs.appendFile('C:/Users/dagarcma/Desktop/historico/historia'+i+'.txt', read + "\r\n", function(err){
+    if (err) throw err;
+   });
+
+   if(current_hour == 0)
+   i++;
+
+
 }
 
 module.exports = {

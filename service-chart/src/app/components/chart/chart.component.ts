@@ -88,6 +88,9 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
   private today : Date ;
   private answer : number;
   private service;
+  private hour;
+  private minutes;
+  private nowSeconds;
  
   @ViewChild(BaseChartDirective) ch: BaseChartDirective;
   @ViewChild('canvas') canvas : ElementRef;
@@ -142,10 +145,10 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
 
 
       // ---***** MOCKING DATA TO UPDATE CHART -- TO BE COMMENTED IN PROD ******----
-      const minutes = this.service.responses[0].Date.substr(14,2);
-      const nowSeconds = this.service.responses[0].Date.substr(17, 2);
-      const hour = this.service.responses[0].Date.substr(11, 2);
-      const hourTimeString = `${hour}:${minutes}:${nowSeconds}`;
+      this.minutes = this.service.responses[0].Date.substr(14,2);
+      this.nowSeconds = this.service.responses[0].Date.substr(17, 2);
+      this.hour = this.service.responses[0].Date.substr(11, 2);
+      const hourTimeString = `${this.hour}:${this.minutes}:${this.nowSeconds}`;
 
       this.answer = this.service.responses[0].Time;      
 
@@ -165,7 +168,7 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
       //this.ch.chart.config.data.options = this.barChartOptions;   
       this.ch.chart.update();
       // [END]  ---***** MOCKING DATA TO UPDATE CHART -- COMMENTED IN PROD ******----
-    }, seconds*1000);
+    }, seconds*400);
   }
 
   private setBarChartOptionsAnnotations() {
@@ -340,7 +343,6 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
         }
 
         localStorage.setItem(service.title , JSON.stringify(newObject));
-
       }
     }
   }
@@ -370,23 +372,13 @@ export class ChartComponent implements AfterViewInit,AfterViewChecked {
       label: r.label,
     }));
 
-    const now = new Date();
 
-    let i = 0;
-    // MOCKING DATA
+    // DATA
     for (let index = 0; index < 700 / 5; index++) {
 
       this.barChartData[0].data.push(this.answer);
-      if(i > 59){
-        i = 0;
-      }
-      const minutes = ("0"+i).substr(-2);
-      const seconds = ("0"+now.getSeconds()).substr(-2);
-      const hourTimeString = `${now.getHours()}:${minutes}:${seconds}`;
-
+      var hourTimeString = ``;
       this.barChartLabels.push(hourTimeString);
-
-      i++;
 
     }
   }
