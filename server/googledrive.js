@@ -134,7 +134,7 @@ console.log("DOWNLOAD: ", fileId);
   console.log(contents);
  }, downloadFile);
 
-
+try{
   drive.files.get({fileId: fileId, alt: "media"}, {responseType: "stream"},
   function(err, res){
       res.data
@@ -146,6 +146,10 @@ console.log("DOWNLOAD: ", fileId);
       })
       .pipe(dest);  
   });
+}catch(e){
+console.log(e);
+};
+ 
 
 
   var date = new Date();
