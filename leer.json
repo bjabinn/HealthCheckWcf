@@ -1,0 +1,57 @@
+{
+    "services": [
+        {
+            "title": "Notification",
+            "url": "http://appstoreservices:81/NotificationService/NotificationService.svc",
+            "type": "WCF",
+            "timeoutLimit": 2000,
+            "intervalSeconds": 10,
+            "responses": [
+                {
+                    "Time": 317,
+                    "Date": "20/05/2019 07:20:46.343"
+                }
+            ]
+        },
+        {
+            "title": "Subscription",
+            "url": "http://appstoreservices:81/SubscriptionService/SubscriptionService.svc",
+            "type": "WCF",
+            "timeoutLimit": 2000,
+            "intervalSeconds": 20,
+            "responses": [
+                {
+                    "Time": 137,
+                    "Date": "20/05/2019 07:20:31.628"
+                }
+            ]
+        },
+        {
+            "title": "Identity",
+            "url": "https://api-ppe.tesco.com/identity",
+            "type": "REST",
+            "timeoutLimit": 3000,
+            "intervalSeconds": 20,
+            "responses": [
+                {
+                    "Time": 391,
+                    "Date": "20/05/2019 07:20:46.465"
+                }
+            ]
+        },
+        {
+            "title": "Scheduler",
+            "url": "http://ukdbt72delsa01v/SchedulerService/schedulerservice.svc",
+            "type": "REST",
+            "timeoutLimit": 2000,
+            "intervalSeconds": 20,
+            "responses": [
+                {
+                    "Time": 171,
+                    "Date": "20/05/2019 07:20:36.48"
+                }
+            ]
+        }
+    ],
+    "configuracion": null
+}

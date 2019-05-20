@@ -7,9 +7,7 @@ const {google} = require('googleapis');
 const SCOPES = [
 'https://www.googleapis.com/auth/drive.metadata.readonly',
 'https://www.googleapis.com/auth/drive.readonly', 
-'https://www.googleapis.com/auth/drive.file', 
-'https://www.googleapis.com/auth/drive',
-'https://www.googleapis.com/auth/drive.apps.readonly'];
+];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
@@ -20,7 +18,7 @@ fs.readFile('credentials.json', (err, content) => {
   if (err) return console.log('Error loading client secret file:', err);
   // Authorize a client with credentials, then call the Google Drive API.
   authorize(JSON.parse(content), listFiles);
-  authorize(JSON.parse(content), downloadFile);
+  //authorize(JSON.parse(content), downloadFile);
 });
 
 /**
@@ -42,7 +40,6 @@ function authorize(credentials, callback) {
     callback(oAuth2Client);   
   });
 }
-
 
 /**
  * Get and store new token after prompting for user authorization, and then
@@ -84,6 +81,7 @@ function getAccessToken(oAuth2Client, callback) {
 let fileId = "";
 
 function listFiles(auth) {
+
   const drive =  google.drive({version: 'v3', auth});
     drive.files.list({
     pageSize: 10,
@@ -99,59 +97,36 @@ function listFiles(auth) {
     } else {
       console.log('No files found.');
     };   
-    downloadFile(auth);  
-    setInterval(function(){repeat()}, 5000);  
-  });
-  
-}
-
-//Authorize the function to be used again
-function autorizar(){
-  fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
-    // Authorize a client with credentials, then call the Google Drive API.
-    authorize(JSON.parse(content), listFiles);
-    authorize(JSON.parse(content), downloadFile);
-  });
-}
-
-//Repeat the download of the file depending on the given time
-function repeat(){
-  setTimeout(autorizar, 5000);
-  setTimeout(listFiles, 5000);
-}
-
-
-
-//Download the file from Google Drive
-function downloadFile(auth) {
-console.log("DOWNLOAD: ", fileId);
+    autorizar();
+    console.log("DOWNLOAD: ", fileId);
   
  let drive = google.drive({version: "v3", auth});
+
+ 
  var dest = fs.createWriteStream('C:/Users/dagarcma/Desktop/app/HealthCheckWcf/service-chart/src/assets/test.json');
  let read = fs.readFileSync('C:/Users/dagarcma/Desktop/app/HealthCheckWcf/service-chart/src/assets/test.json','utf8', (err, contents) => {
   if (err) throw err;  
   console.log(contents);
- }, downloadFile);
+ }, listFiles);
 
-try{
-  drive.files.get({fileId: fileId, alt: "media"}, {responseType: "stream"},
-  function(err, res){
-      res.data
-      .on("end", () => {
-         console.log("Done");
-      })
-      .on("error", err => {
-         console.log("Error", err);
-      })
-      .pipe(dest);  
-  });
+ try{
+ drive.files.get({ fileId: fileId, alt:'media'}, { responseType: 'stream'},
+ function(err, res){
+  if(err) throw err;
+  
+  res.data
+  .on('end', ()=>{
+    console.log("Done");
+  })
+  .on('error', err => {
+      console.log(err)
+  })
+  .pipe(dest);
+},{fields:'*'});
 }catch(e){
-console.log(e);
-};
- 
-
-
+  console.log(e);
+}
+  
   var date = new Date();
   var current_hour = date.getHours();
   var i = 0;
@@ -161,14 +136,27 @@ console.log(e);
    });
 
    if(current_hour == 0)
-   i++;
+   i++;  
 
-
+  });
+  
 }
+
+
+
+//Authorize the function to be used again
+function autorizar(){
+  fs.readFile('credentials.json', (err, content) => {
+    if (err) return console.log('Error loading client secret file:', err);
+    authorize(JSON.parse(content), listFiles);
+  });
+}
+
+
 
 module.exports = {
   SCOPES,
-  listFiles,
-  downloadFile
+  listFiles
+
 };
 
